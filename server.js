@@ -9,6 +9,7 @@ const veggies = require('./models/veggies');
 require('dotenv').config();
 const mongoose = require('mongoose')
 const Fruit = require('./models/Fruit');
+const methodOverride = require('method-override')
 
 // -------------------------
 // Mongoose Connection Stuff
