@@ -93,7 +93,6 @@ app.get('/fruits/reset', (req, res) => {
 //-----------------------
 
 // Index
-
 app.get('/fruits', (req, res) => {
   Fruit.find({}, (error, allFruits) => {
     res.render('fruits/Index', {
@@ -103,13 +102,42 @@ app.get('/fruits', (req, res) => {
 });
 
 // New
-
 app.get('/fruits/new', (req, res) => {
   res.render('fruits/New');
 });
 
-// Create
+// Delete
+app.delete('/fruits/:id', (req, res) => {
+  Fruit.deleteOne({
+    _id: req.params.id
+  }, (error, data) => {
+    console.log(data);
+    res.redirect('/fruits');
+  })
+});
 
+// Update
+app.put('/fruits/:id', (req, res) => {
+  if (req.body.readyToEat === 'on') {
+    req.body.readyToEat = true
+  } else {
+    req.body.readyToEat = false
+  }
+  Fruit.updateOne({
+    _id: req.params.id
+  }, req.body, (error, data) => {
+    if (error) {
+      console.error(error);
+      res.json({
+        error: error
+      });
+    } else {
+      res.redirect(`/fruits/${req.params.id}`);
+    }
+  });
+});
+
+// Create
 app.post('/fruits', (req, res) => {
   if (req.body.readyToEat === 'on') {
     req.body.readyToEat = true;
@@ -121,8 +149,23 @@ app.post('/fruits', (req, res) => {
   })
 });
 
-// Show
+// Edit
+app.get('/fruits/:id/edit', (req, res) => {
+  Fruit.findOne({
+    _id: req.params.id
+  }, (error, foundFruit) => {
+    if (error) {
+      console.error(error);
+      res.json({
+        error: error
+      })
+    } else {
+      res.render('fruits/Edit', { fruit: foundFruit });
+    }
+  })
+});
 
+// Show
 app.get('/fruits/:id', (req, res) => {
   Fruit.findOne({ _id: req.params.id }, (error, foundFruit) => {
     res.render('fruits/Show', {
