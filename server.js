@@ -40,6 +40,57 @@ app.use(express.urlencoded({extended:false}));
 // Fruit Routes
 // -------------------------
 
+// ------------------------
+// SEED ROUTE
+// ------------------------
+
+// CLEAR DATABASE ROUTE -- testing route (not run by users)
+app.get('/fruits/clear', (req, res) => {
+  Fruit.deleteMany({}, (error, data) => {
+    if (error) {
+      console.error(error)
+    } else {
+    res.json({
+      message: 'Cleared'
+      })
+    }
+  })
+})
+
+// SEED DATABASE ROUTE -- testing route (not for users)
+// adds many pieces of data to database
+app.get('/fruits/seed', (req, res) => {
+  Fruit.insertMany(seedData, (error, createdFruits) => {
+    if (error) {
+      console.error(error)
+    } else {
+      res.json({
+        message: 'Seeded'
+      })
+    }
+  })
+})
+
+// RESET DATABASE ROUTE -- testing route (definitely not for users)
+app.get('/fruits/reset', (req, res) => {
+  Fruit.deleteMany({}, (error, data) => {
+    if (error) {
+      console.error(error)
+    } else {
+      Fruit.insertMany(seedData, (error, createdFruits) => {
+        if (error) {
+          console.error(error)
+        } else {
+          res.json({
+            message: 'Database has been reset'
+          })
+        }
+      })
+    }
+  })
+})
+//-----------------------
+
 // Index
 
 app.get('/fruits', (req, res) => {
